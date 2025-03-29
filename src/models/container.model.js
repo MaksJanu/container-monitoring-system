@@ -5,8 +5,8 @@ const containerStatsSchema = new mongoose.Schema({
 
     containerId: {
         type: String,
-        default: uuidv4,
-        unique: true,
+        required: true,
+        unique: true, 
     },
 
     name: {
