@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const containerStatsSchema = new mongoose.Schema({
 
@@ -16,7 +15,6 @@ const containerStatsSchema = new mongoose.Schema({
 
     status: {
         type: String,
-        enum: ['active', 'inactive'],
         default: 'active',
     },
 
