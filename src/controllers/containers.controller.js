@@ -1,16 +1,25 @@
 import Docker from "dockerode";
-import mongoose from "mongoose";
 import ContainerStats from "../models/container.model.js";
-mongoose.set('bufferTimeoutMS', 30000);
 
-const docker = new Docker()
+const docker = new Docker();
+
+
+const parseDockerLogs = (logsBuffer) => {
+  if (!logsBuffer || logsBuffer.length === 0) return [];
+  
+  return logsBuffer.toString('utf8')
+    .split('\n')
+    .filter(line => line.trim() !== '')
+    .slice(0, 50);
+};
 
 
 const fetchAndStoreContainerStats = async () => {
-    try {
-      const containers = await docker.listContainers({ all: true });
-
-      const updatePromises = containers.map(async (containerInfo) => {
+  try {
+    const containers = await docker.listContainers({ all: true });
+    
+    await Promise.all(containers.map(async (containerInfo) => {
+      try {
         const container = docker.getContainer(containerInfo.Id);
         const stats = await container.stats({ stream: false });
   
@@ -30,19 +39,20 @@ const fetchAndStoreContainerStats = async () => {
   
         // Network usage
         const networkUsage = Object.values(stats.networks || {}).reduce(
-          (acc, net) => acc + net.rx_bytes + net.tx_bytes,
-          0
+          (acc, net) => acc + net.rx_bytes + net.tx_bytes, 0
         );
   
         // Logs
-        const logs = await container.logs({
+        const logsBuffer = await container.logs({
           stdout: true,
           stderr: true,
           tail: 50,
           timestamps: true
         });
+        
+        const parsedLogs = parseDockerLogs(logsBuffer);
   
-        return ContainerStats.findOneAndUpdate(
+        await ContainerStats.findOneAndUpdate(
           { containerId: containerInfo.Id },
           {
             containerId: containerInfo.Id,
@@ -52,16 +62,32 @@ const fetchAndStoreContainerStats = async () => {
             ramMemoryUsage,
             diskUsage,
             networkUsage,
-            logs: [],
+            logs: parsedLogs,
           },
           { upsert: true, new: true }
         );
-      });
-  
-      await Promise.all(updatePromises);
-      console.log('All container stats updated successfully');
-    } catch (error) {
-      console.error('Error fetching container stats:', error);
-    }
-  };
-fetchAndStoreContainerStats();
+        
+        console.log(`Updated stats for container: ${containerInfo.Names[0]}`);
+      } catch (err) {
+        console.error(`Error updating container ${containerInfo.Id}:`, err.message);
+      }
+    }));
+    
+    console.log('All container stats updated successfully');
+  } catch (error) {
+    console.error('Error fetching container stats:', error);
+  }
+};
+
+
+const getAllContainerStats = async (req, res) => {
+  try {
+    const stats = await ContainerStats.find({});
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+export { fetchAndStoreContainerStats, getAllContainerStats };
