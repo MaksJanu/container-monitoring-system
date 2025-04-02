@@ -4,14 +4,27 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cron from 'node-cron';
+import cors from 'cors';
+
 import { fetchAndStoreContainerStats } from './controllers/containers.controller.js';
 import containerRoutes from './routes/container.route.js';
-
+import authRoutes from './routes/auth.route.js';
 
 dotenv.config();
 mongoose.set('bufferTimeoutMS', 60000);
 
+
 const app = express();
+
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
 
 
 // Middlewares
@@ -21,7 +34,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
+// Routes
 app.use('/api/containers', containerRoutes);
+app.use('/api/auth', authRoutes);
 
 
 
