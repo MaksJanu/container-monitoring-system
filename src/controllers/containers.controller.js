@@ -1,8 +1,8 @@
 import Docker from "dockerode";
 import ContainerStats from "../models/container.model.js";
+import ContainerHistory from "../models/containerHistory.model.js";
 
 const docker = new Docker();
-
 
 const parseDockerLogs = (logsBuffer) => {
   if (!logsBuffer || logsBuffer.length === 0) return [];
@@ -12,7 +12,6 @@ const parseDockerLogs = (logsBuffer) => {
     .filter(line => line.trim() !== '')
     .slice(0, 50);
 };
-
 
 const fetchAndStoreContainerStats = async () => {
   try {
@@ -67,6 +66,17 @@ const fetchAndStoreContainerStats = async () => {
           { upsert: true, new: true }
         );
         
+        await ContainerHistory.create({
+          containerId: containerInfo.Id,
+          timestamp: new Date(),
+          metrics: {
+            cpuUsage,
+            ramMemoryUsage,
+            diskUsage,
+            networkUsage
+          }
+        });
+        
         console.log(`Updated stats for container: ${containerInfo.Names[0]}`);
       } catch (err) {
         console.error(`Error updating container ${containerInfo.Id}:`, err.message);
@@ -79,7 +89,6 @@ const fetchAndStoreContainerStats = async () => {
   }
 };
 
-
 const getAllContainerStats = async (req, res) => {
   try {
     const stats = await ContainerStats.find({});
@@ -89,5 +98,63 @@ const getAllContainerStats = async (req, res) => {
   }
 };
 
+const getContainerHistory = async (req, res) => {
+  try {
+    const { containerId, startDate, endDate, limit = 100 } = req.query;
+    
+    const query = { containerId };
+    
+    if (startDate || endDate) {
+      query.timestamp = {};
+      if (startDate) query.timestamp.$gte = new Date(startDate);
+      if (endDate) query.timestamp.$lte = new Date(endDate);
+    }
+    
+    const history = await ContainerHistory.find(query)
+      .sort({ timestamp: -1 })
+      .limit(parseInt(limit))
+      .exec();
+      
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-export { fetchAndStoreContainerStats, getAllContainerStats };
+const deleteOldHistory = async (daysToKeep = 30) => {
+  try {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+    
+    const result = await ContainerHistory.deleteMany({
+      timestamp: { $lt: cutoffDate }
+    });
+    
+    console.log(`Deleted ${result.deletedCount} historical records older than ${daysToKeep} days`);
+    return result;
+  } catch (error) {
+    console.error('Error deleting old history:', error);
+    throw error;
+  }
+};
+
+const deleteAllHistory = async (req, res) => {
+  try {
+    const result = await deleteOldHistory(0);
+    res.json({ 
+      message: 'All container history records deleted', 
+      deletedCount: result.deletedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+export { 
+  fetchAndStoreContainerStats, 
+  getAllContainerStats, 
+  getContainerHistory,
+  deleteOldHistory,
+  deleteAllHistory
+};

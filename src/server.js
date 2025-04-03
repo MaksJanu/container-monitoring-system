@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cron from 'node-cron';
 import cors from 'cors';
 
-import { fetchAndStoreContainerStats } from './controllers/containers.controller.js';
+import { fetchAndStoreContainerStats, deleteOldHistory } from './controllers/containers.controller.js';
 import containerRoutes from './routes/container.route.js';
 import authRoutes from './routes/auth.route.js';
 
@@ -54,6 +54,12 @@ mongoose.connect(process.env.MONGO_URI, {
     console.log('Running container stats update...');
     fetchAndStoreContainerStats()
       .catch(err => console.error('Error in scheduled container stats update:', err));
+  });
+
+  cron.schedule('* * * * *', () => {
+    console.log('Running cleanup of old container history...');
+    deleteOldHistory(30)
+      .catch(err => console.error('Error in scheduled history cleanup:', err));
   });
 
   fetchAndStoreContainerStats()
