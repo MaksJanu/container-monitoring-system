@@ -58,7 +58,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
   cron.schedule('* * * * *', () => {
     console.log('Running cleanup of old container history...');
-    deleteOldHistory(30)
+    deleteOldHistory(0)
       .catch(err => console.error('Error in scheduled history cleanup:', err));
   });
 
