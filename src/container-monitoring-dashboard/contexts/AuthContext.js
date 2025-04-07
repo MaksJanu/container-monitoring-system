@@ -23,8 +23,9 @@ export function AuthProvider({ children }) {
   }, []);
   
   const login = async (username, password) => {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     try {
-      const response = await axios.post(`${process.env.API_URL}/api/auth/login`, {
+      const response = await axios.post(`http://localhost:3000/api/auth/login`, {
         username,
         password
       });
@@ -47,8 +48,9 @@ export function AuthProvider({ children }) {
   };
   
   const register = async (username, password, role = 'viewer') => {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+      await axios.post(`http://localhost:3000/api/auth/register`, {
         username,
         password,
         role
