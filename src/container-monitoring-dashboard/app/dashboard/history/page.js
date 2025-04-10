@@ -21,7 +21,7 @@ export default function ContainerHistory() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeRange, setTimeRange] = useState('hour'); // 'hour', 'day', 'week'
+  const [timeRange, setTimeRange] = useState('hour');
   
   const fetchHistory = async () => {
     if (!containerId) return;
