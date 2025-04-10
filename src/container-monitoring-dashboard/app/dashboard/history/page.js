@@ -127,12 +127,12 @@ export default function ContainerHistory() {
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-800 to-indigo-900">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(to bottom right, #98D8EF, #EAE2C6)' }}>
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Container History</h1>
+          <h1 className="text-3xl font-bold text-black">Container History</h1>
           <button 
             onClick={() => router.push('/dashboard')}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
@@ -149,7 +149,7 @@ export default function ContainerHistory() {
         
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Performance History</h2>
+            <h2 className="text-xl text-black font-semibold">Performance</h2>
             
             <div className="flex space-x-2">
               <button 

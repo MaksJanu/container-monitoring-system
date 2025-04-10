@@ -69,7 +69,6 @@ export default function Dashboard() {
           </div>
         )}
         
-        {user.role === 'admin' && <AdminControls onRefresh={fetchContainers} />}
         
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg shadow-lg p-6 transform transition-all hover:scale-[1.01]">
@@ -80,6 +79,7 @@ export default function Dashboard() {
             ) : (
               <StatsOverview containers={containers} />
             )}
+            {user.role === 'admin' && <AdminControls onRefresh={fetchContainers} />}
           </div>
           
           <div className="bg-white rounded-lg shadow-lg p-6 transform transition-all hover:scale-[1.01]">

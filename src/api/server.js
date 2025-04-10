@@ -56,12 +56,6 @@ mongoose.connect(process.env.MONGO_URI, {
       .catch(err => console.error('Error in scheduled container stats update:', err));
   });
 
-  cron.schedule('* * * * *', () => {
-    console.log('Running cleanup of old container history...');
-    deleteOldHistory(0)
-      .catch(err => console.error('Error in scheduled history cleanup:', err));
-  });
-
   fetchAndStoreContainerStats()
     .then(() => console.log('Initial container stats collected'))
     .catch(err => console.error('Error collecting initial container stats:', err));
