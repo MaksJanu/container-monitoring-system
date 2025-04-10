@@ -17,9 +17,6 @@ export default function Header() {
           </Link>
           
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600">
-              Dashboard
-            </Link>
             
             <div className="relative ml-3">
               <div>
@@ -88,14 +85,6 @@ export default function Header() {
         
         {isMenuOpen && (
           <div className="md:hidden mt-4">
-            <div className="pt-2 pb-3 space-y-1">
-              <Link
-                href="/dashboard"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-              >
-                Dashboard
-              </Link>
-            </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="flex items-center px-5">
                 <div className="ml-3">

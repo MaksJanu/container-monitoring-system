@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/layout/Header';
+import Header from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';

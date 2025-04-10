@@ -6,7 +6,7 @@ import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import ContainerList from '@/components/dashboard/ContainerList';
 import StatsOverview from '@/components/dashboard/StatsOverview';
-import Header from '@/components/layout/Header';
+import Header from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import AdminControls from '@/components/layout/AdminControls';
 

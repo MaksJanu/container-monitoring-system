@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/api';
 
 // Components
-import Header from '@/components/layout/Header';
+import Header from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ContainerList from '@/components/dashboard/ContainerList';
 import StatsOverview from '@/components/dashboard/StatsOverview';
