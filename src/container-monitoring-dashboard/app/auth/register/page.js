@@ -40,7 +40,7 @@ export default function Register() {
   };
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-800 to-indigo-900">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, #98D8EF, #EAE2C6)' }}>
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-xl">
         <div>
           <h1 className="text-3xl font-bold text-center text-gray-900">Container Monitoring</h1>
