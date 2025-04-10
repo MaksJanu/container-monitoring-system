@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 export default function ContainerList({ containers }) {
   const [selectedContainer, setSelectedContainer] = useState(null);
+  const [showFullId, setShowFullId] = useState(false);
   
   if (!containers || containers.length === 0) {
     return <div className="text-white">No containers available</div>;
@@ -87,7 +88,29 @@ export default function ContainerList({ containers }) {
               <h4 className="font-medium text-gray-700">Basic Information</h4>
               <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2">
                 <dt className="text-sm font-medium text-gray-500">ID</dt>
-                <dd className="text-sm text-gray-900">{selectedContainer.containerId}</dd>
+                <dd className="text-sm text-gray-900">
+                  <span 
+                    onClick={() => setShowFullId(!showFullId)}
+                    className="cursor-pointer hover:text-blue-600"
+                    title={showFullId ? "Click to collapse" : "Click to show full ID"}
+                  >
+                    {showFullId 
+                      ? selectedContainer.containerId 
+                      : `${selectedContainer.containerId.substring(0, 12)}...`}
+                  </span>
+                  {showFullId && (
+                    <button 
+                      className="ml-2 text-xs text-blue-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(selectedContainer.containerId);
+                        alert('ID copied to clipboard!');
+                      }}
+                    >
+                      Copy
+                    </button>
+                  )}
+                </dd>
                 <dt className="text-sm font-medium text-gray-500">Status</dt>
                 <dd className="text-sm text-gray-900">{selectedContainer.status}</dd>
                 <dt className="text-sm font-medium text-gray-500">Created</dt>
@@ -113,7 +136,7 @@ export default function ContainerList({ containers }) {
           {selectedContainer.logs && selectedContainer.logs.length > 0 && (
             <div className="mt-6">
               <h4 className="font-medium text-gray-700">Recent Logs</h4>
-              <div className="mt-2 bg-gray-100 p-3 rounded-md h-48 overflow-y-auto">
+              <div className="mt-2 bg-gray-100 p-3 rounded-md h-48 text-black overflow-y-auto">
                 <pre className="text-xs font-mono">
                   {selectedContainer.logs.join('\n')}
                 </pre>
