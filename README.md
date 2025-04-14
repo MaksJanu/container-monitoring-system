@@ -136,7 +136,7 @@ Main dashboard displaying container statistics and resource usage.
 Detailed view of a specific container's metrics and logs.
 
 ### Historical Data
-![Historical Data](public/images/container_history.png)
+![Historical Data](public/images/container_history_performance.png)
 Charts showing historical performance data for selected containers.
 
 ## 👨‍💻 Author
