@@ -53,7 +53,7 @@ Container Monitoring System is a comprehensive solution that provides real-time 
 - **Docker**: Containerization platform
 - **Docker Compose**: Tool for defining multi-container Docker applications
 
-## 🧬 Project Structure
+## 🧬 Approximate Project Structure
 
 ```
 container-monitoring-system/
